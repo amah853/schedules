@@ -19,5 +19,11 @@ jobs:
 
           gh api repos/amah853/bell/dispatches \
             --method POST \
-            --field event_type=schedules-updated \
-            --raw-field client_payload="{\"schedules_sha\":\"${GITHUB_SHA}\"}"
+            --input - <<EOF
+          {
+            "event_type": "schedules-updated",
+            "client_payload": {
+              "schedules_sha": "${GITHUB_SHA}"
+            }
+          }
+          EOF
