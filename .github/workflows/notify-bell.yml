@@ -1,0 +1,23 @@
+name: Notify Bell
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  notify-bell:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Bell schedules update
+        env:
+          GH_TOKEN: ${{ secrets.BELL_REPO_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "Missing BELL_REPO_DISPATCH_TOKEN secret."
+            exit 1
+          fi
+
+          gh api repos/amah853/bell/dispatches \
+            --method POST \
+            --field event_type=schedules-updated \
+            --raw-field client_payload="{\"schedules_sha\":\"${GITHUB_SHA}\"}"
